@@ -35,10 +35,8 @@ class Main {
     // Carregando o HTML da pagina
     @$dom->loadHTML($html);
 
+    $data = (new Scrapper())->scrap($dom);    
 
-    $data = (new Scrapper())->scrap($dom);
-    
-    
     $i=0;
     foreach ($data as $item) {
       // Array sequencial resultante
@@ -65,14 +63,8 @@ class Main {
       // Criando uma única linha para adicionar a na planilha
       $insert = WriterEntityFactory::createRowFromArray($result);
       $writer->addRow($insert);
-
-     
     }
 
     $writer->close();
   }
-
 }
-
-$teste = new Main();
-$teste->run();
