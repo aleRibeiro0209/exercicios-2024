@@ -21,7 +21,7 @@ class Main {
     $writer = WriterEntityFactory::createXLSXWriter();
     $writer->openToBrowser($file);
 
-    // // Escrevendo cabecalho
+    // Escrevendo cabecalho
     $cabecalho = ['ID', 'Title', 'Type', 'Author 1', 'Author 1 Institution', 'Author 2', 'Author 2 Institution', 'Author 3', 'Author 3 Institution', 'Author 4', 'Author 4 Institution', 'Author 5', 'Author 5 Institution', 'Author 6', 'Author 6 Institution', 'Author 7', 'Author 7 Institution', 'Author 8', 'Author 8 Institution', 'Author 9', 'Author 9 Institution','Author 10', 'Author 10 Institution'];
 
     // Adiciona uma nova linha com os valores
@@ -35,36 +35,38 @@ class Main {
     // Carregando o HTML da pagina
     @$dom->loadHTML($html);
 
-    // Declaracao de objeto
-    $xpath = new \DOMXPath($dom);
 
-    // Captura a div com a class especificada
-    $paperCard = $xpath->query("//a[contains(@class, 'paper-card')]");
-    $count = 0;
+    $data = (new Scrapper())->scrap($dom);
+    
+    
+    $i=0;
+    foreach ($data as $item) {
+      // Array sequencial resultante
+      $result = array();
+      foreach ($item['authors'] as $author) {
+        $result[$i] = $author['name'];
+        $i++;
+        $result[$i] = $author['institution'];
+        $i++;
+      }
+      $i=0;
+      $item['authors'] = $result;
 
-    foreach ($paperCard as $papel) {
-      $data = (new Scrapper())->scrap($dom, $papel, $count);
-      $count++;
-
-      // Declaracao do array que recebera todos os valores na sequencia
-      $sequentialArray = [];
-
-      foreach ($data as $key => $value) {
-          // Se o valor for um array insere os valores deste array no array sequencial
-          if (is_array($value)) {
-              foreach ($value as $innerValue) {
-                  $sequentialArray[] = $innerValue['name'];
-                  $sequentialArray[] = $innerValue['institution'];
+      $result = array();
+      foreach ($item as $key => $value) {
+          if ($key === 'authors') {
+              foreach ($value as $author) {
+                $result[] = $author;
               }
           } else {
-              // Se não for um array, apenas adiciona o valor no array sequencial
-              $sequentialArray[] = $value;
+              $result[] = $value;
           }
       }
-
       // Criando uma única linha para adicionar a na planilha
-      $insert = WriterEntityFactory::createRowFromArray($sequentialArray);
+      $insert = WriterEntityFactory::createRowFromArray($result);
       $writer->addRow($insert);
+
+     
     }
 
     $writer->close();
