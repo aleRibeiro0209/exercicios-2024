@@ -2,93 +2,75 @@
 
 namespace Chuva\Php\WebScrapping;
 
+require_once 'Scrapper.php';
 require_once '../vendor/box/spout/src/Spout/Autoloader/autoload.php';
 
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
-
+use Chuva\Php\WebScrapping\Scrapper;
+/**
+ * Runner for the Webscrapping exercice.
+ */
 class Main {
 
-  public static function gerarPlanilha(): void {
-  
-  // Criando o arquivo .XLSX similar ao model.xlsx
-  $file = 'planilhaProceedings.xlsx';
-  $writer = WriterEntityFactory::createXLSXWriter();
-  $writer->openToBrowser($file);
+  /**
+   * Main runner, instantiates a Scrapper and runs.
+   */
+  public static function run(): void {
+    // Criando o arquivo .XLSX similar ao model.xlsx
+    $file = 'planilhaProceedings.xlsx';
+    $writer = WriterEntityFactory::createXLSXWriter();
+    $writer->openToBrowser($file);
 
-  // Escrevendo cabecalho
-  $cabecalho = ['ID', 'Title', 'Type', 'Author 1', 'Author 1 Institution', 'Author 2', 'Author 2 Institution', 'Author 3', 'Author 3 Institution', 'Author 4', 'Author 4 Institution', 'Author 5', 'Author 5 Institution', 'Author 6', 'Author 6 Institution', 'Author 7', 'Author 7 Institution', 'Author 8', 'Author 8 Institution', 'Author 9', 'Author 9 Institution','Author 10', 'Author 10 Institution'];
+    // // Escrevendo cabecalho
+    $cabecalho = ['ID', 'Title', 'Type', 'Author 1', 'Author 1 Institution', 'Author 2', 'Author 2 Institution', 'Author 3', 'Author 3 Institution', 'Author 4', 'Author 4 Institution', 'Author 5', 'Author 5 Institution', 'Author 6', 'Author 6 Institution', 'Author 7', 'Author 7 Institution', 'Author 8', 'Author 8 Institution', 'Author 9', 'Author 9 Institution','Author 10', 'Author 10 Institution'];
 
-  // Adiciona uma nova linha com os valores
-  $rowFromValues = WriterEntityFactory::createRowFromArray($cabecalho);
-  $writer->addRow($rowFromValues); 
+    // Adiciona uma nova linha com os valores
+    $rowFromValues = WriterEntityFactory::createRowFromArray($cabecalho);
+    $writer->addRow($rowFromValues); 
 
-  // Utilizando DOMDocument para acessar o conteudo da pagina
-  $html = file_get_contents(__DIR__ . '/../../assets/origin.html');
-  $dom = new \DOMDocument;
+    // Utilizando DOMDocument para acessar o conteudo da pagina
+    $dom = new \DOMDocument('1.0', 'utf-8');
+    $html = file_get_contents(__DIR__ . '/../../assets/origin.html');
+    
+    // Carregando o HTML da pagina
+    @$dom->loadHTML($html);
 
-  // Carregando o HTML da pagina
-  @$dom->loadHTML($html);
+    // Declaracao de objeto
+    $xpath = new \DOMXPath($dom);
 
-  // Criacao de um objeto DOMXPath
-  $xpath = new \DOMXPath($dom);
+    // Captura a div com a class especificada
+    $paperCard = $xpath->query("//a[contains(@class, 'paper-card')]");
+    $count = 0;
 
-  // Pega as informacoes de tudo dentros dos elementos ancora da pagina
-  $links = $xpath->query("//a[contains(@class, 'paper-card')]");
+    foreach ($paperCard as $papel) {
+      $data = (new Scrapper())->scrap($dom, $papel, $count);
+      $count++;
 
-  // Declaracao de variaveis
-  $count = 0;
+      // Declaracao do array que recebera todos os valores na sequencia
+      $sequentialArray = [];
 
-  // Para cada elemento link dentro do elemento links
-  foreach ($links as $link){
-
-      // Transforma a variável autores em array
-      $informacoes = array();
-
-      // Declarao de variaveis
-      $i=0;
-
-      // Selecionar a div com classe "volume-info"
-      $ID = $xpath->query("//div[contains(@class, 'volume-info')]")->item($count);
-      $ID = $ID->nodeValue;
-
-      // Selecionar a h4 com classe "paper-title"
-      $titulo = $xpath->query("//h4[contains(@class, 'paper-title')]")->item($count);
-      $titulo = $titulo->nodeValue;
-
-      // Selecionar a div com classe "tags mr-sm"
-      $type = $xpath->query("//div[contains(@class, 'tags mr-sm')]")->item($count);
-      $type = $type->nodeValue;
-
-      // Pega as informacoes de todos os elementos span dentro do elemento ancora
-      $nomes = $link->getElementsByTagName('span');
-
-      $autores = array();
-
-      // Para nome de autor executa
-      foreach ($nomes as $nome) {
-
-          $instituicao = $nome->getAttribute('title');
-          $author = $nome->nodeValue;
-
-          // Adiciona o nome do autor e sua instituição ao array de autores
-          $autores[] = $author;
-          $autores[] = $instituicao;
-
-          $i++;
+      foreach ($data as $key => $value) {
+          // Se o valor for um array insere os valores deste array no array sequencial
+          if (is_array($value)) {
+              foreach ($value as $innerValue) {
+                  $sequentialArray[] = $innerValue['name'];
+                  $sequentialArray[] = $innerValue['institution'];
+              }
+          } else {
+              // Se não for um array, apenas adiciona o valor no array sequencial
+              $sequentialArray[] = $value;
+          }
       }
 
-      // Adicionando informações do artigo e autores em uma única linha
-      $informacoes = array_merge(array($ID,$titulo,$type), $autores);
-
-      // Criando uma única linha para adicionar ao escritor
-      $insert = WriterEntityFactory::createRowFromArray($informacoes);
+      // Criando uma única linha para adicionar ao escritoro
+      $insert = WriterEntityFactory::createRowFromArray($sequentialArray);
       $writer->addRow($insert);
-      $count++;
-  }
-    
-  $writer->close();
+    }
+
+    $writer->close();
   }
 
 }
-$gerar = new Main();
-$gerar->gerarPlanilha();
+
+$teste = new Main();
+$teste->run();
