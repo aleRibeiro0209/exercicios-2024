@@ -62,7 +62,7 @@ class Main {
           }
       }
 
-      // Criando uma única linha para adicionar ao escritoro
+      // Criando uma única linha para adicionar a na planilha
       $insert = WriterEntityFactory::createRowFromArray($sequentialArray);
       $writer->addRow($insert);
     }
