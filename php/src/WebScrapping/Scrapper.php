@@ -16,8 +16,7 @@ class Scrapper {
   /**
    * Loads paper information from the HTML and returns the array with the data.
    */
-
-  public function scrap(\DOMDocument $dom): array{
+  public function scrap(\DOMDocument $dom): array {
 
     $xpath = new \DOMXPath($dom);
 
@@ -42,14 +41,14 @@ class Scrapper {
       foreach ($span as $author) {
         $name = $author->nodeValue;
         $institution = $author->getAttribute('title');
-        $authores[] =  get_object_vars(new Person($name, $institution));
+        $authores[] = get_object_vars(new Person($name, $institution));
       }
       $count++;
 
       $informacoes[] = get_object_vars(new Paper($id, $title, $type, $authores));
     }
-    
+
     return $informacoes;
-  }     
+  }
 
 }
