@@ -46,18 +46,19 @@ class Main {
 
       $result = [];
       foreach ($item as $key => $value) {
-              if ($key === 'authors') {
-                  foreach ($value as $author) {
-                      $result[] = $author;
-                  }
-              } else {
-                  $result[] = $value;
-              }
+        if ($key === 'authors') {
+          foreach ($value as $author) {
+            $result[] = $author;
+          }
+        } else {
+          $result[] = $value;
+        }
       }
       $insert = WriterEntityFactory::createRowFromArray($result);
       $writer->addRow($insert);
     }
     $writer->close();
-    
+
   }
+  
 }
