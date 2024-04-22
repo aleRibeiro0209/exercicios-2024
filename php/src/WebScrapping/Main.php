@@ -6,6 +6,7 @@ require_once 'Scrapper.php';
 require_once '../vendor/box/spout/src/Spout/Autoloader/autoload.php';
 
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
+
 /**
  * Runner for the Webscrapping exercice.
  */
@@ -15,7 +16,6 @@ class Main {
    * Main runner, instantiates a Scrapper and runs.
    */
   public static function run(): void {
-  
     $file = 'planilhaProceedings.xlsx';
     $writer = WriterEntityFactory::createXLSXWriter();
     $writer->openToBrowser($file);
@@ -34,7 +34,7 @@ class Main {
 
     $i=0;
     foreach ($data as $item) {
-      $result = array();
+      $result = [];
       foreach ($item['authors'] as $author) {
         $result[$i] = $author['name'];
         $i++;
@@ -44,7 +44,7 @@ class Main {
       $i=0;
       $item['authors'] = $result;
 
-      $result = array();
+      $result = [];
       foreach ($item as $key => $value) {
           if ($key === 'authors') {
               foreach ($value as $author) {
@@ -57,9 +57,6 @@ class Main {
       $insert = WriterEntityFactory::createRowFromArray($result);
       $writer->addRow($insert);
     }
-
     $writer->close();
   }
 }
-
-(new Main())->run();
