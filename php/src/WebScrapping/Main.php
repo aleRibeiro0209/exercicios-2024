@@ -21,9 +21,9 @@ class Main {
     $writer->openToBrowser($file);
 
     $cabecalho = ['ID', 'TITLE', 'TYPE'];
-    for ($i = 1; $i <= 10; $i++) { 
-      $cabecalho [] = 'Author '.$i;
-      $cabecalho [] = 'Author instituition '.$i;
+    for ($i = 1; $i <= 10; $i++) {
+      $cabecalho[] = 'Author ' . $i;
+      $cabecalho[] = 'Author instituition ' . $i;
     }
 
     $rowFromValues = WriterEntityFactory::createRowFromArray($cabecalho);
