@@ -2,8 +2,8 @@
 
 namespace Chuva\Php\WebScrapping;
 
-require_once './Entity/Paper.php';
-require_once './Entity/Person.php';
+require_once 'php/src/WebScrapping/Entity/Entity/Paper.php';
+require_once 'php/src/WebScrapping/Entity/Person.php';
 
 use Chuva\Php\WebScrapping\Entity\Paper;
 use Chuva\Php\WebScrapping\Entity\Person;
