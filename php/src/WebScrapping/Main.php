@@ -3,7 +3,7 @@
 namespace Chuva\Php\WebScrapping;
 
 require_once __DIR__ . '/Scrapper.php';
-require __DIR__ . '/../../vendor/box/spout/src/Spout/Autoloader/autoload.php';
+require __DIR__ . ("/../../vendor/box/spout/src/Spout/Autoloader/autoload.php");
 
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 
