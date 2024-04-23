@@ -21,8 +21,8 @@ class Main {
     @$dom->loadHTML($html);
 
     $data = (new Scrapper())->scrap($dom);
-
-    $writer = (new WriterEntityFactory)->createXLSXWriter();
+    $writerEntityFactory = new WriterEntityFactory();
+    $writer = $writerEntityFactory->createXLSXWriter();
     $writer->openToFile('planilhaProceedings.xlsx');
 
     $cabecalho = ['ID', 'TITLE', 'TYPE'];
@@ -31,7 +31,7 @@ class Main {
       $cabecalho[] = 'Author instituition ' . $i;
     }
 
-    $rowFromValues = WriterEntityFactory::createRowFromArray($cabecalho);
+    $rowFromValues = $writerEntityFactory::createRowFromArray($cabecalho);
     $writer->addRow($rowFromValues);
 
     $i = 0;
@@ -57,7 +57,7 @@ class Main {
           $result[] = $value;
         }
       }
-      $insert = WriterEntityFactory::createRowFromArray($result);
+      $insert = $writerEntityFactory::createRowFromArray($result);
       $writer->addRow($insert);
     }
     $writer->close();
