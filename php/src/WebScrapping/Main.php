@@ -19,7 +19,7 @@ class Main {
     @$dom->loadHTML($html);
 
     $data = (new Scrapper())->scrap($dom);
-    $writer = (new WriterEntityFactory())::createXLSXWriter();
+    $writer = (new WriterEntityFactory)::createXLSXWriter();
     $writer->openToFile('planilhaProceedings.xlsx');
 
     $cabecalho = ['ID', 'TITLE', 'TYPE'];
