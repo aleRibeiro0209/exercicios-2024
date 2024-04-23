@@ -16,8 +16,7 @@ class Main {
    */
   public static function run(): void {
     $file = 'planilhaProceedings.xlsx';
-    $writer = new WriterEntityFactory();
-    $writer = $writer::createXLSXWriter();
+    $writer = WriterEntityFactory::createXLSXWriter();
     $writer->openToBrowser($file);
 
     $cabecalho = ['ID', 'TITLE', 'TYPE'];
