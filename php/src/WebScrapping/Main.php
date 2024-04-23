@@ -2,7 +2,7 @@
 
 namespace Chuva\Php\WebScrapping;
 
-require_once __DIR__ ."../../vendor/box/spout/src/Spout/Autoloader/autoload.php";
+require_once __DIR__ . "../../vendor/box/spout/src/Spout/Autoloader/autoload.php";
 
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 
@@ -16,7 +16,8 @@ class Main {
    */
   public static function run(): void {
     $file = 'planilhaProceedings.xlsx';
-    $writer = WriterEntityFactory::createXLSXWriter();
+    $writer = new WriterEntityFactory();
+    $writer = $writer::createXLSXWriter();
     $writer->openToBrowser($file);
 
     $cabecalho = ['ID', 'TITLE', 'TYPE'];
