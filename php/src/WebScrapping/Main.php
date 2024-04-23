@@ -28,7 +28,7 @@ class Main {
       $cabecalho[] = 'Author instituition ' . $i;
     }
 
-    $rowFromValues = (new WriterEntityFactory())->createRowFromArray($cabecalho);
+    $rowFromValues = WriterEntityFactory::createRowFromArray($cabecalho);
     $writer->addRow($rowFromValues);
 
     $i = 0;
@@ -54,7 +54,7 @@ class Main {
           $result[] = $value;
         }
       }
-      $insert = (new WriterEntityFactory())->createRowFromArray($result);
+      $insert = WriterEntityFactory::createRowFromArray($result);
       $writer->addRow($insert);
     }
     $writer->close();
