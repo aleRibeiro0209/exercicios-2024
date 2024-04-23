@@ -2,7 +2,7 @@
 
 namespace Chuva\Php\WebScrapping;
 
-require_once 'Scrapper.php';
+require_once './Scrapper.php';
 require_once __DIR__ . '../vendor/autoload.php';
 
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
