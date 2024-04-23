@@ -22,7 +22,7 @@ class Main {
 
     $data = (new Scrapper())->scrap($dom);
 
-    $writer = WriterEntityFactory::createXLSXWriter();
+    $writer = (new WriterEntityFactory)->createXLSXWriter();
     $writer->openToFile('planilhaProceedings.xlsx');
 
     $cabecalho = ['ID', 'TITLE', 'TYPE'];
