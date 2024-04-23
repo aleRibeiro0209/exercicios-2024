@@ -3,7 +3,7 @@
 namespace Chuva\Php\WebScrapping;
 
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
-
+use Chuva\Php\WebScrapping\Scrapper;
 /**
  * Runner for the Webscrapping exercice.
  */
@@ -19,6 +19,7 @@ class Main {
     @$dom->loadHTML($html);
 
     $data = (new Scrapper())->scrap($dom);
+    
     $writerEntityFactory = new WriterEntityFactory();
     $writer = $writerEntityFactory->createXLSXWriter();
     $writer->openToFile('planilhaProceedings.xlsx');
